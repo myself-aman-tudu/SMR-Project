@@ -1,0 +1,33 @@
+\section*{\underline{Introduction and Problem Statement}}
+\markboth{Introduction and Problem Statement}{}
+
+\subsection{Problem Statement}
+Our data-analysis team has been tasked with investigating equipment downtime and maintenance efficacy for a continuous manufacturing line. Because this system operates as a serial production line with minimal buffers, a failure at any single machine node immediately acts as a bottleneck, cascading into line-wide throughput losses and severely impacting Overall Equipment Effectiveness (OEE). Management has observed significant variability in machine repair times, raising concerns about the consistency of current maintenance practices.
+
+The primary engineering and statistical objectives of this project are to identify the key factors driving lengthy repair times. Management targets require the true average repair time and the proportion of excessively long repairs to remain strictly below defined acceptable thresholds. Furthermore, we are tasked with statistically evaluating whether a recently introduced standardized maintenance procedure has successfully reduced repair times and determining if historical operational data can be used to predict future downtime.
+
+\subsection{Dataset Selection and Architecture}
+Because a specific dataset was not provided, we selected the ``OEE and Downtime Dataset from Heavy Clay Manufacturing Line'' sourced from Zenodo. This dataset provides real-world industrial data covering a heavy-clay production line from clay extrusion to brick packaging. The data was collected by Evocon real-time OEE software and represents the best fit for our analytical objectives. 
+
+This database was specifically chosen because it perfectly mirrors the company's management concerns:
+\begin{itemize}
+    \item It directly records the stop duration in minutes, which serves as our primary response variable for repair time.
+    \item The data is explicitly split into two phases: before and after a Lean Six Sigma (LSS) implementation. This split serves as the ideal proxy to evaluate the ``new maintenance procedure'' introduced by management.
+\end{itemize}
+
+The raw database is distributed across four primary \texttt{.csv} files, categorizing metrics into event-based logs and shift-based performance indicators:
+
+\begin{itemize}
+    \item \textbf{Event-Based Downtime Records} (\texttt{DowntimeDataset.csv} and \texttt{afterLSS} variant): These files record individual line stoppages. The recorded metrics include the date, product code, stop reason, stop type, stop location, an operator free-text note, stop start time, stop end time, and the stop duration in minutes.
+    \item \textbf{Shift-Based OEE Records} (\texttt{OEEdataset.csv} and \texttt{afterLSS} variant): These macroscopic files track aggregate shift performance, capturing the OEE percentage, Availability, Performance, Quality, planned versus unplanned stop times, and production quantities (good vs. total).
+\end{itemize}
+
+\subsection{Contextual Assumptions and Limitations}
+To apply this real-world dataset to the generalized project questions, we establish the following contextual assumptions and variable mappings:
+
+\begin{itemize}
+    \item \textbf{Response Variable:} We assume ``repair time'' is directly equivalent to the total recorded \textit{stop duration (minutes)}.
+    \item \textbf{Maintenance Procedure Evaluation:} The generalized ``new standardized maintenance procedure'' is defined as the Lean Six Sigma (LSS) implementation. We will compare the ``before'' and ``after'' datasets to evaluate its efficacy.
+    \item \textbf{Shift and Failure Mode Derivation:} While not explicitly labeled as standalone columns, operating shifts will be derived mathematically from the \textit{stop start time}, and the failure mode will be categorized using the \textit{stop reason} and \textit{stop type} variables.
+    \item \textbf{Data Limitations:} The prompt suggests investigating failure severity, machine age, and technician experience. However, these specific factors are missing from our real-world dataset. For the scope of this project, we assume these are unmeasured latent variables, and our predictive modeling will rely strictly on the temporal, spatial (stop location), and operational factors available.
+\end{itemize}

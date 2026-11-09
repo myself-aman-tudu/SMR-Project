@@ -1,0 +1,88 @@
+\section*{\underline{PART F: Association Between Numerical Variables}}
+\markboth{PART F: Association Between Numerical Variables}{}
+
+\textit{Note: Question 17 will be addressed subsequently. We proceed directly to Question 18.}
+
+\subsection*{Question 18: Which factors significantly affect repair time after accounting for the other factors in the model?}
+
+To determine which factors significantly influence repair time while controlling for confounding variables, we fitted a Multiple Linear Regression (OLS) model. Because the original repair time distribution was heavily right-skewed, we used the log-transformed repair time (\texttt{LogRepairTime}) as our dependent variable. We utilized heteroscedasticity-robust standard errors (HC3) to ensure the reliability of our p-values.
+
+The overall model is statistically significant (F-statistic = 14.80, $p = 1.07 \times 10^{-32}$), explaining approximately 21.9\% of the variance in the log-transformed repair times ($R^2 = 0.219$). The full regression results are detailed in Table \ref{tab:regression_results}.
+
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{lrrrrrr}
+        \toprule
+        \textbf{Predictor Variable} & \textbf{Coef.} & \textbf{Std. Err.} & \textbf{z} & \textbf{P$>|$z$|$} & \textbf{[0.025} & \textbf{0.975]} \\
+        \midrule
+        Intercept & 1.1527 & 0.290 & 3.973 & 0.000 & 0.584 & 1.721 \\
+        StopGroup [MATERIALS] & -0.2106 & 0.115 & -1.829 & 0.067 & -0.436 & 0.015 \\
+        StopGroup [OPERATIONAL] & 0.1861 & 0.176 & 1.054 & 0.292 & -0.160 & 0.532 \\
+        StopGroup [SETUPS-CHANGEOVERS] & 0.4615 & 0.174 & 2.654 & 0.008 & 0.121 & 0.802 \\
+        StopType [Planned - Not in OEE] & 1.3730 & 1.027 & 1.337 & 0.181 & -0.639 & 3.385 \\
+        StopType [Unplanned] & 0.4476 & 0.215 & 2.081 & 0.037 & 0.026 & 0.869 \\
+        Location [DRYER] & 0.3177 & 0.125 & 2.550 & 0.011 & 0.073 & 0.562 \\
+        Location [EXTRUDER PRESS] & 0.8498 & 0.188 & 4.515 & 0.000 & 0.481 & 1.219 \\
+        Location [HACKING STATION] & 0.6906 & 0.150 & 4.601 & 0.000 & 0.396 & 0.985 \\
+        Location [HYD. ELEVATOR (LOADING)] & 0.4243 & 0.225 & 1.886 & 0.059 & -0.017 & 0.865 \\
+        Location [HYD. ELEVATOR (UNLOADING)] & 0.7950 & 0.173 & 4.598 & 0.000 & 0.456 & 1.134 \\
+        Location [LINE 52] & 0.5813 & 0.171 & 3.402 & 0.001 & 0.246 & 0.916 \\
+        Location [Other] & 0.6680 & 0.184 & 3.633 & 0.000 & 0.308 & 1.028 \\
+        Location [SILO] & 0.6771 & 0.210 & 3.227 & 0.001 & 0.266 & 1.088 \\
+        Location [Unknown] & 0.9007 & 1.015 & 0.887 & 0.375 & -1.089 & 2.891 \\
+        Hour of Day & 0.0209 & 0.013 & 1.597 & 0.110 & -0.005 & 0.046 \\
+        \bottomrule
+    \end{tabular}
+    }
+    \caption{OLS Regression Results (Dependent Variable: \texttt{LogRepairTime}). Standard errors are heteroscedasticity robust (HC3).}
+    \label{tab:regression_results}
+\end{table}
+
+Based on the regression output, at a standard significance level of $\alpha = 0.05$, the following factors significantly affect repair time when accounting for all other variables in the model:
+
+\begin{itemize}
+    \item \textbf{Stop Location (Machine Type):} The specific location of the breakdown is the strongest predictor of repair duration. Compared to the baseline location, breakdowns at the \texttt{EXTRUDER PRESS} ($p < 0.001$), \texttt{HACKING STATION} ($p < 0.001$), \texttt{HYDRAULIC ELEVATOR (UNLOADING)} ($p < 0.001$), \texttt{SILO} ($p = 0.001$), \texttt{LINE 52} ($p = 0.001$), and \texttt{DRYER} ($p = 0.011$) all result in statistically significant increases in the expected repair time.
+    \item \textbf{Stop Type (\texttt{Unplanned}):} Whether a stop is planned or unplanned has a significant independent effect. \texttt{Unplanned} stops ($p = 0.037$) significantly increase the expected repair time compared to standard planned OEE stoppages, highlighting the unpredictable nature of sudden mechanical failures.
+    \item \textbf{Stop Group (\texttt{SETUPS-CHANGEOVERS}):} The broader category of the downtime also matters. Specifically, downtime events categorized as \texttt{SETUPS-CHANGEOVERS} ($p = 0.008$) significantly increase the repair duration compared to the baseline group.
+\end{itemize}
+
+\textbf{Non-Significant Factors:}
+Interestingly, after accounting for the machine location and failure type, the \textbf{Hour of the day} ($p = 0.110$) did not have a statistically significant effect on repair time. This suggests that the duration of a repair is driven fundamentally by the mechanical complexity of the broken machine (e.g., Extruder Press vs. Cutter) and the nature of the stop, rather than what time of day the failure occurs.
+
+\subsection*{Question 19: Can we predict the repair time for a future repair event using the factors we have measured?}
+
+Yes, using the multiple linear regression model developed in Question 18, we can forecast the expected downtime for a specific future event based on its operational characteristics. 
+
+To demonstrate this predictive capability, we simulated a highly critical, realistic breakdown scenario on the factory floor:
+\begin{itemize}
+    \item \textbf{Stop Location:} \texttt{EXTRUDER PRESS} (identified in Q18 as a mechanically complex bottleneck)
+    \item \textbf{Stop Group:} \texttt{OPERATIONAL}
+    \item \textbf{Stop Type:} \texttt{Unplanned}
+    \item \textbf{Starting Hour:} 14:00 (2:00 PM, during the historically slower afternoon shift)
+\end{itemize}
+
+Feeding these parameters into our trained model yields the following forecasts:
+\begin{itemize}
+    \item \textbf{Predicted Repair Time (Median):} 18.69 minutes
+    \item \textbf{95\% Prediction Interval:} [4.21, 83.07] minutes
+\end{itemize}
+
+
+\textbf{Engineering and Statistical Interpretation:}
+\begin{enumerate}
+    \item \textbf{Predicted Repair Duration:}
+    Our model estimates that an unplanned operational stoppage at the Extruder Press at 2:00 PM will typically take approximately 18.69 minutes to resolve. Since we modeled the log-transformed repair time, this back-transformed point estimate represents the expected median duration.
+
+    \item \textbf{Interpretation of the Prediction Interval:}
+    The 95\% Prediction Interval ranges from approximately 4 minutes to 83 minutes. Unlike a Confidence Interval, which estimates uncertainty around a population average, a Prediction Interval estimates the plausible range for a \textit{single, specific future event}.
+
+    \item \textbf{Operational Risk:}
+    Although the maintenance team will likely resolve the issue in under 20 minutes, the wide prediction interval indicates substantial uncertainty in the duration of an individual repair. This failure could potentially take more than 80 minutes to resolve, exceeding both the 15-minute and 60-minute downtime targets.
+
+    \item \textbf{Limitations of the Predictive Model:}
+    The wide prediction interval highlights a limitation of the available MES dataset. Important explanatory variables, such as \textit{exact failure severity}, \textit{technician experience level}, and \textit{machine age}, are not available in sufficient detail.
+
+    \item \textbf{Recommendations for Better Prediction:}
+    The factory should systematically record these missing variables. Incorporating them into future predictive models could improve prediction accuracy, reduce uncertainty, and help maintenance teams prepare for prolonged breakdowns.
+\end{enumerate}

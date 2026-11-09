@@ -1,0 +1,36 @@
+\section*{\underline{PART A: Understanding the Problem and the Data}}
+\markboth{PART A: Understanding the Problem and the Data}{}
+
+\subsection*{Question 1: Response Variable and Measurement}
+\begin{itemize}
+    \item \textbf{Response Variable:} The primary response variable is the machine repair time, which is represented in the dataset as the \texttt{StopDuration(min)} column in the pre-implementation data and \texttt{Stop duration (min) (TTR)} in the post-implementation data.
+    \item \textbf{Beginning of Repair:} The repair or downtime event begins at the recorded \texttt{StopStartTime} (pre-implementation) or \texttt{Stop start time} (post-implementation).
+    \item \textbf{End of Repair:} The repair event concludes at the recorded \texttt{StopEndTime} (pre-implementation) or \texttt{Stop end time} (post-implementation).
+    \item \textbf{Unit of Measurement:} The response variable is measured continuously in minutes.
+    \item \textbf{Spare Parts Inclusion:} Waiting for spare parts or materials is included in the overall stop duration but can be isolated or excluded if desired, as these events are specifically categorized under the ``MATERIALS'' tag in the \texttt{StopGroup} / \texttt{Stop group} column (e.g., ``MANUAL BRICK HANDLING'').
+\end{itemize}
+
+\subsection*{Question 2: Factors Influencing Repair Time}
+Based on the available dataset columns, the following candidate explanatory variables will be used to analyze their influence on repair time:
+\begin{itemize}
+    \item \textbf{Machine Type / Location (\texttt{StopLocation} / \texttt{Stop Location}):} Different machines along the serial line (e.g., EXTRUDER PRESS, CUTTER, HACKING STATION) have varying mechanical complexities and accessibility, directly impacting how long a repair takes.
+    \item \textbf{Failure Mode / Type (\texttt{Stop} and \texttt{StopGroup} / \texttt{Stop group}):} The exact reason for the stop (e.g., ``MECHANICAL FAILURE'', ``CLEANING'', ``WIRE ROLL REPLACEMENT'') dictates the technical work required. A mechanical failure will naturally require more repair time than a routine cleaning or changeover.
+    \item \textbf{Operating Shift (Derived from \texttt{StopStartTime}):} The timestamp of the failure (e.g., 07:15, 10:58, 22:00) allows the data to be grouped into distinct shifts. Repair times may vary between day and night shifts due to differing staffing levels, technician fatigue, or access to support resources.
+    \item \textbf{Operating Load / Product (\texttt{Productcode} / \texttt{Product code}):} The specific product being manufactured at the time (e.g., ``KK250'', ``9KK25'') may stress the machinery differently or require specific, time-consuming setups.
+    \item \textbf{New Maintenance Procedure (Dataset Split):} The implementation of Lean Six Sigma (LSS) acts as the new maintenance procedure. Comparing the \texttt{Downtime\\Dataset.csv} against the \texttt{DowntimeDataset\_afterLSS.csv} will determine if the standardized LSS protocols successfully reduced average repair times.
+\end{itemize}
+\textit{Note on Missing Factors:} The dataset does not contain variables for machine age, technician experience, or explicit failure severity. This limitation will be documented and treated as an unmeasured latent variable.
+
+\subsection*{Question 3: Data Collection and Representation}
+\begin{itemize}
+    \item \textbf{Population:} The target population is all potential machine failures and operational downtime events that can occur on this specific continuous heavy-clay production line.
+    \item \textbf{Sample Selection:} The sample consists of all event-based downtime records automatically captured by the Evocon Manufacturing Execution System (MES) during the observed pre-LSS and post-LSS periods. We will utilize the entire historical log rather than selecting a random sub-sample to maximize statistical power.
+    \item \textbf{Potential Bias and Unrepresentativeness:} The sample is restricted to the time frame during which the Evocon system was active. Furthermore, the absence of data on technician experience and machine age introduces omitted variable bias, meaning we cannot account for whether faster repairs were simply the result of senior technicians being on shift.
+    \item \textbf{Measurement Problems and Missing Information:}
+    \begin{itemize}
+        \item The \texttt{ExtraText} / \texttt{Extra text} column contains multiple missing (\texttt{NaN}) or unrecorded values (e.g., marked as ``-'').
+        \item The post-LSS dataset contains anomalous parsing artifacts upon import, resulting in empty, unrecorded columns (e.g., \texttt{Unnamed: 1002} through \texttt{Unnamed: 1011} populated entirely with \texttt{NaN} values).
+        \item The post-LSS data import also triggers a \texttt{DtypeWarning} indicating mixed data types in columns 0 through 8.
+    \end{itemize}
+    \item \textbf{Handling Incomplete Data:} We will drop the entirely empty artifact columns. For missing categorical data like \texttt{ExtraText}, we will impute the \texttt{NaN} values with a placeholder string (e.g., ``No Note Provided'') rather than deleting the row, ensuring we do not lose the critical continuous repair time data associated with that event. We will also force strict data type conversions during preprocessing to resolve the mixed-type warnings.
+\end{itemize}
