@@ -207,12 +207,17 @@ Figure \ref{fig:failure_type} displays the distribution of repair times across t
     \label{fig:failure_type}
 \end{figure}
 
+
 \subsection*{Question 15: Is the variability in repair time acceptable?}
 
-To evaluate whether the variability in machine repair times is within the company's acceptable limit, we conducted a Chi-Square test for a single population variance. Management established an acceptable upper limit for the standard deviation of 20.00 minutes, which equates to a maximum acceptable variance of 400.00 $\text{min}^2$.
+To evaluate whether the variability in machine repair times is within the
+company's acceptable limit, we conducted a Chi-Square test for a single
+population variance. For this analysis, only repair records belonging to
+the MATERIALS category were considered. The company's acceptable upper
+limit for the standard deviation was set at 10.00 minutes, corresponding
+to a maximum acceptable variance of 100.00 $\text{min}^2$.
 
-\vspace{3.0cm}
-
+\vspace{2cm}
 The hypotheses for this right-tailed test are defined as:
 
 \begin{center}
@@ -224,13 +229,13 @@ The hypotheses for this right-tailed test are defined as:
             \vspace{0.15cm}
 
             \textbf{Null Hypothesis:}
-            $\sigma^2 \leq 400$
+            $\sigma^2 = 100$
             (The population variance is within the acceptable limit)
 
             \vspace{0.15cm}
 
             \textbf{Alternative Hypothesis:}
-            $\sigma^2 > 400$
+            $\sigma^2 > 100$
             (The population variance exceeds the acceptable limit)
 
             \vspace{0.1cm}
@@ -238,64 +243,112 @@ The hypotheses for this right-tailed test are defined as:
     }
 \end{center}
 
-
 The results of the Chi-Square test are summarized below:
+
 \begin{itemize}
-    \item \textbf{Acceptable Variance Target:} 400.00 $\text{min}^2$ (SD = 20.00 min)
-    \item \textbf{Sample Variance:} 492.24 $\text{min}^2$ (SD = 22.19 min)
-    \item \textbf{Sample Size ($n$):} 635
-    \item \textbf{Chi-Square Statistic:} 780.1928
-    \item \textbf{P-Value:} $6.03 \times 10^{-5}$ (or 0.0000603)
+    \item \textbf{Acceptable Variance Target:}
+    100.00 $\text{min}^2$ (SD = 10.00 min)
+
+    \item \textbf{Sample Variance:}
+    93.22 $\text{min}^2$ (SD = 9.66 min)
+
+    \item \textbf{Sample Size ($n$):} 189
+
+    \item \textbf{Chi-Square Statistic:} 175.2613
+
+    \item \textbf{P-Value:} 0.738203
 \end{itemize}
 
-\textbf{Conclusion:} Because the calculated p-value is extremely small and well below the standard 0.05 significance level, we \textbf{reject the null hypothesis}. There is robust statistical evidence indicating that the true population variance of repair times significantly exceeds the company's acceptable limit. The maintenance process is currently too volatile and unpredictable.
+\textbf{Conclusion:}
+Since the calculated p-value (0.738203) is greater than the
+significance level of 0.05, we fail to reject the null hypothesis.
+There is insufficient statistical evidence to conclude that the
+population variance of repair times in the MATERIALS category exceeds
+the company's acceptable limit.
 
-Figure \ref{fig:variance_target} visualizes this excess variability, contrasting the narrower acceptable target distribution against the wider actual process distribution.
+The observed sample standard deviation is 9.66 minutes, which is
+slightly below the acceptable limit of 10.00 minutes. Thus, the
+observed variability is within the specified target, although the
+hypothesis test does not establish that the population variance
+definitively satisfies the requirement.
+
+Figure \ref{fig:variance_target} compares the actual repair-time
+distribution for the MATERIALS category with the acceptable target
+distribution.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\linewidth]{figures/variance-target.png}
-    \caption{Actual Repair Time Variability vs Acceptable Limit. The actual process curve (solid orange) demonstrates a wider spread (SD = 22.19 min) than the acceptable target curve (dashed green, SD = 20 min).}
+    \caption{Actual Repair Time Variability vs Acceptable Limit for
+    the MATERIALS category. The actual process distribution
+    (solid orange) has a sample standard deviation of 9.66 minutes,
+    compared with the acceptable target distribution
+    (dashed green) with a standard deviation of 10 minutes.}
     \label{fig:variance_target}
 \end{figure}
 
-\subsection*{Question 16: Is there sufficient statistical evidence that more than 20\% of repairs take longer than 30 minutes?}
 
-\textit{Note: The company's original acceptable limit of 25\% for repairs exceeding 60 minutes was adjusted to a 20\% limit for repairs exceeding 30 minutes to better reflect the realities of the baseline data.}
+\subsection*{Question 16: Proportion of Repairs Exceeding a Specified Duration}
 
-To determine if the proportion of lengthy repairs exceeds the company's acceptable threshold, we conducted a one-sample proportion hypothesis test (right-tailed). The hypotheses are defined as:
+The objective is to determine whether the proportion of repairs exceeding a specified
+duration is greater than the acceptable limit of 10\%. To examine how the choice of
+duration threshold affects the result, three thresholds (25, 30, and 35 minutes) are
+considered.
+
+A one-sample exact binomial test is performed for each threshold. Let $p$ denote the
+population proportion of repairs exceeding the specified duration.
 
 \begin{center}
     \fbox{
-        \begin{minipage}{0.95\textwidth}
+        \begin{minipage}{0.65\textwidth}
             \centering
             \textbf{Hypotheses}
 
             \vspace{0.15cm}
 
-            \textbf{Null Hypothesis:}
-            $p \leq 0.20$
-            (The proportion of repairs taking over 30 minutes is 20\% or less)
+            \textbf{Null Hypothesis:} $p = 0.10$
 
-            \vspace{0.15cm}
+            \vspace{0.1cm}
 
-            \textbf{Alternative Hypothesis:}
-            $p > 0.20$
-            (The proportion of repairs taking over 30 minutes exceeds 20\%)
+            \textbf{Alternative Hypothesis:} $p > 0.10$
 
             \vspace{0.1cm}
         \end{minipage}
     }
 \end{center}
 
+The significance level is set to $\alpha = 0.05$. The test results are summarized below.
 
-The results of the proportion test are summarized below:
-\begin{itemize}
-    \item \textbf{Total Repairs ($n$):} 635
-    \item \textbf{Repairs Exceeding 30 Minutes:} 71
-    \item \textbf{Observed Proportion ($\hat{p}$):} 11.18\%
-    \item \textbf{Acceptable Target Proportion ($p_0$):} 20.00\%
-    \item \textbf{P-Value:} 1.0000
-\end{itemize}
+\begin{table}[htbp]
+    \centering
+    \caption{Binomial test results for different repair-duration thresholds}
+    \label{tab:q16_binomial}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Duration Threshold} &
+        \textbf{Observed Proportion} &
+        \textbf{p-value} &
+        \textbf{Decision} \\
+        \hline
+        25 minutes & 14.33\% & 0.000341 & Reject $H_0$ \\
+        \hline
+        30 minutes & 11.18\% & 0.176499 & Fail to reject $H_0$ \\
+        \hline
+        35 minutes & 8.98\% & 0.822189 & Fail to reject $H_0$ \\
+        \hline
+    \end{tabular}
+\end{table}
 
-\textbf{Conclusion:} Because our calculated p-value (1.0000) is far greater than any standard significance level (e.g., $\alpha = 0.05$), we \textbf{fail to reject the null hypothesis}. The observed proportion of lengthy repairs (11.18\%) is strictly lower than the 20.00\% target. Therefore, there is insufficient statistical evidence to conclude that more than 20\% of the machine repairs take longer than 30 minutes. The company is currently meeting this specific operational target comfortably.
+\textbf{Interpretation:}
+
+At the 25-minute threshold, the p-value (0.000341) is below the significance level
+of 0.05. Therefore, the null hypothesis is rejected. There is sufficient statistical
+evidence that more than 10\% of repairs take longer than 25 minutes.
+
+For the 30-minute and 35-minute thresholds, the p-values are greater than 0.05.
+Hence, the null hypothesis cannot be rejected for either threshold. There is
+insufficient statistical evidence to conclude that more than 10\% of repairs exceed
+these durations.
+
+\textbf{Conclusion and Engineering Implication:}
+The proportion of repairs exceeding 25 minutes is significantly greater than the acceptable limit of 10\%, while no significant evidence is found at the 30- and 35-minute thresholds. Therefore, repairs exceeding 25 minutes deserve further investigation to identify potential delays. The 10\% benchmark is assumed and should be validated against operational requirements. These results represent a threshold-based sensitivity analysis using the same dataset.

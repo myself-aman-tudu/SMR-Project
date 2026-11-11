@@ -1,13 +1,35 @@
-\section*{\underline{PART F: Association Between Numerical Variables}}
-\markboth{PART F: Association Between Numerical Variables}{}
+% \section*{\underline{PART F: Association Between Numerical Variables}}
+% \markboth{PART F: Association Between Numerical Variables}{}
 
-\textit{Note: Question 17 will be addressed subsequently. We proceed directly to Question 18.}
+\section*{\underline{PART F: Association Between Variables}}
+\markboth{PART F: Association Between Variables}{}
+
+
+\subsection*{Question 17: Is there a linear trend in repair time over the observation period?}
+
+The original question concerns the relationship between machine age and repair time. However, machine installation dates and age information were not available in the dataset. Therefore, as an alternative analysis, we examined whether repair duration shows any linear trend over the observation period.
+
+For this purpose, the stoppage date was converted into elapsed days from the beginning of the dataset and compared with the corresponding repair duration. Pearson correlation and simple linear regression were used to investigate this relationship.
+
+\textbf{Statistical Findings ($n = 635$):}
+
+\begin{itemize}
+    \item \textbf{Pearson Correlation:} $r = -0.0292$ ($p = 0.4627$)
+    \item \textbf{Regression Slope:} $-0.0252$ minutes/day
+    \item \textbf{Coefficient of Determination:} $R^2 = 0.0009$
+    \item \textbf{Regression p-value:} $0.5139$
+    \item \textbf{95\% Confidence Interval for Slope:} $[-0.1010,\ 0.0505]$
+\end{itemize}
+
+\textbf{Interpretation and Conclusion:}
+The Pearson correlation coefficient ($r=-0.0292$) indicates a negligible linear association between observation date and repair duration. The regression p-value ($0.5139$) exceeds the significance level of $0.05$, so we fail to reject the null hypothesis of no linear trend. The $R^2$ value ($0.0009$) shows that observation date explains only $0.09\%$ of the variation in repair duration, while the 95\% confidence interval for the slope includes zero. Thus, there is no statistically significant evidence of a linear trend in repair duration over the observation period. However, this does not establish whether machine ageing affects repair time, as machine-age data were unavailable.
+
 
 \subsection*{Question 18: Which factors significantly affect repair time after accounting for the other factors in the model?}
 
 To determine which factors significantly influence repair time while controlling for confounding variables, we fitted a Multiple Linear Regression (OLS) model. Because the original repair time distribution was heavily right-skewed, we used the log-transformed repair time (\texttt{LogRepairTime}) as our dependent variable. We utilized heteroscedasticity-robust standard errors (HC3) to ensure the reliability of our p-values.
 
-The overall model is statistically significant (F-statistic = 14.80, $p = 1.07 \times 10^{-32}$), explaining approximately 21.9\% of the variance in the log-transformed repair times ($R^2 = 0.219$). The full regression results are detailed in Table \ref{tab:regression_results}.
+
 
 \begin{table}[H]
     \centering
@@ -38,6 +60,8 @@ The overall model is statistically significant (F-statistic = 14.80, $p = 1.07 \
     \caption{OLS Regression Results (Dependent Variable: \texttt{LogRepairTime}). Standard errors are heteroscedasticity robust (HC3).}
     \label{tab:regression_results}
 \end{table}
+
+The overall model is statistically significant (F-statistic = 14.80, $p = 1.07 \times 10^{-32}$), explaining approximately 21.9\% of the variance in the log-transformed repair times ($R^2 = 0.219$). The full regression results are detailed in Table \ref{tab:regression_results}.
 
 Based on the regression output, at a standard significance level of $\alpha = 0.05$, the following factors significantly affect repair time when accounting for all other variables in the model:
 
